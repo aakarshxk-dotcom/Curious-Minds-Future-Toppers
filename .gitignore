@@ -10,7 +10,6 @@ install.log
 .env
 .env.local
 .env.production
-prisma/dev.db
 prisma/dev.db-journal
 dev.db
 custom.db
