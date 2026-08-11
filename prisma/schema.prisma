@@ -1,0 +1,489 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  password   String?
+  name       String?
+  phone      String?
+  role       String   @default("student") // "admin" | "student"
+  avatar     String?
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  enrollments       Enrollment[]
+  reviews           Review[]
+  notifications     Notification[]
+  payments          Payment[]
+  progress          CourseProgress[]
+  uploadedResources Resource[]
+  quizAttempts      QuizAttempt[]
+  certificates      Certificate[]
+  sessionFeedback   SessionFeedback[]
+}
+
+model Course {
+  id               String   @id @default(cuid())
+  title            String
+  description      String?
+  thumbnail        String?
+  banner           String?
+  price            Float    @default(0)
+  discountPrice    Float?
+  category         String?
+  status           String   @default("draft") // "published" | "draft"
+  level            String   @default("beginner") // "beginner" | "intermediate" | "advanced"
+  duration         String?
+  featured         Boolean  @default(false)
+  instructorName   String?
+  instructorBio    String?
+  instructorAvatar String?
+  instructorTitle  String?
+  requirements     String?
+  whatYouLearn     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  chapters        Chapter[]
+  videos          Video[]
+  enrollments     Enrollment[]
+  reviews         Review[]
+  liveSessions    LiveSession[]
+  resources       Resource[]
+  quizzes         Quiz[]
+  announcements   Announcement[]
+  payments        Payment[]
+  classCategory   ClassCategory? @relation(fields: [classCategoryId], references: [id], onDelete: SetNull)
+  classCategoryId String?
+
+  @@index([status, featured])
+  @@index([category])
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int      @default(0)
+  courseId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  videos Video[]
+}
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  videoUrl    String?
+  duration    Int      @default(0) // in seconds
+  freePreview Boolean  @default(false)
+  order       Int      @default(0)
+  chapterId   String
+  courseId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chapter  Chapter          @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  course   Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress CourseProgress[]
+
+  @@index([courseId, order])
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String
+  status      String    @default("active") // "active" | "completed" | "cancelled"
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+  paymentId   String?   @unique
+
+  user    User     @relation(fields: [userId], references: [id])
+  course  Course   @relation(fields: [courseId], references: [id])
+  payment Payment? @relation(fields: [paymentId], references: [id])
+
+  @@index([userId, courseId])
+}
+
+model CourseProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  videoId   String
+  completed Boolean  @default(false)
+  watchTime Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id])
+  video Video @relation(fields: [videoId], references: [id])
+
+  @@index([userId, courseId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  rating    Int // 1-5
+  comment   String?
+  status    String   @default("pending") // "approved" | "pending" | "rejected"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@index([courseId, status])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info") // "info" | "success" | "warning" | "course" | "live"
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  userId        String
+  courseId      String
+  amount        Float
+  status        String   @default("pending") // "pending" | "completed" | "failed"
+  method        String   @default("upi")
+  transactionId String?
+  createdAt     DateTime @default(now())
+
+  user       User        @relation(fields: [userId], references: [id])
+  course     Course      @relation(fields: [courseId], references: [id])
+  enrollment Enrollment?
+
+  @@index([userId, courseId])
+}
+
+model SessionFeedback {
+  id        String   @id @default(cuid())
+  sessionId String
+  userId    String
+  rating    Int // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  session LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User        @relation(fields: [userId], references: [id])
+
+  @@index([sessionId])
+  @@unique([sessionId, userId])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([isRead, createdAt])
+}
+
+model GalleryItem {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String
+  type        String   @default("photo") // "photo" | "video"
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([order])
+}
+
+model Faculty {
+  id         String   @id @default(cuid())
+  name       String
+  title      String?
+  bio        String?
+  photo      String?
+  subjects   String?
+  experience String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([order])
+}
+
+model LiveSession {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  courseId      String?
+  teacherId     String
+  channelId     String    @unique
+  thumbnail     String?
+  status        String    @default("scheduled") // "scheduled" | "live" | "ended"
+  startTime     DateTime?
+  endTime       DateTime?
+  viewerCount   Int       @default(0)
+  peakViewers   Int       @default(0)
+  maxViewers    Int       @default(0)
+  enableChat    Boolean   @default(true)
+  enableDoubts  Boolean   @default(true)
+  recordSession Boolean   @default(false)
+  batchName     String?
+  batchType     String? // "cbse" | "icse" | "bihar-board" | "jee" | "neet" | "coding" | "class-6-10"
+  subject       String?
+  duration      Int       @default(0) // in seconds
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  course          Course?           @relation(fields: [courseId], references: [id])
+  classCategory   ClassCategory?    @relation(fields: [classCategoryId], references: [id], onDelete: SetNull)
+  classCategoryId String?
+  chatMessages    ChatMessage[]
+  recordings      StreamRecording[]
+  polls           LivePoll[]
+  reactions       StreamReaction[]
+  attendance      LiveAttendance[]
+  sessionFeedback SessionFeedback[]
+
+  @@index([status, startTime])
+  @@index([batchType])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  userId    String
+  userName  String?
+  message   String
+  createdAt DateTime @default(now())
+
+  session LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+}
+
+model Resource {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  type         String // "VIDEO" or "PDF"
+  url          String // file path like /uploads/resources/xxx.pdf
+  fileName     String? // original file name
+  fileSize     Int? // in bytes
+  course       Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  courseId     String?
+  chapterId    String?
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedById String?
+  category     String? // e.g., "Notes", "Assignment", "Reference", "Lecture"
+  downloads    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([courseId, category])
+}
+
+model Quiz {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  courseId     String
+  chapterId    String?
+  timeLimit    Int      @default(0) // in minutes, 0 = no limit
+  passingScore Int      @default(70) // percentage
+  maxAttempts  Int      @default(3)
+  order        Int      @default(0)
+  status       String   @default("published") // "published" | "draft"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+
+  @@index([courseId, status])
+}
+
+model QuizQuestion {
+  id            String   @id @default(cuid())
+  quizId        String
+  question      String
+  questionType  String   @default("multiple_choice") // "multiple_choice" | "true_false" | "short_answer"
+  options       String? // JSON array of options
+  correctAnswer String
+  explanation   String?
+  points        Int      @default(1)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  quizId      String
+  score       Int      @default(0)
+  totalPoints Int      @default(0)
+  answers     String? // JSON
+  passed      Boolean  @default(false)
+  timeTaken   Int      @default(0) // in seconds
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  quiz Quiz @relation(fields: [quizId], references: [id])
+
+  @@index([userId, quizId])
+}
+
+model Certificate {
+  id            String   @id @default(cuid())
+  userId        String
+  courseId      String
+  certificateNo String   @unique
+  issuedAt      DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, courseId])
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  courseId  String
+  title     String
+  message   String?
+  type      String   @default("info") // "info" | "important" | "urgent"
+  createdAt DateTime @default(now())
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model StreamRecording {
+  id           String   @id @default(cuid())
+  sessionId    String
+  title        String
+  description  String?
+  videoUrl     String?
+  thumbnailUrl String?
+  duration     Int      @default(0) // in seconds
+  fileSize     Int      @default(0) // in bytes
+  views        Int      @default(0)
+  status       String   @default("processing") // "processing" | "ready" | "failed"
+  quality      String   @default("hd") // "hd" | "sd" | "low"
+  createdAt    DateTime @default(now())
+
+  session LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([status])
+}
+
+model LivePoll {
+  id         String   @id @default(cuid())
+  sessionId  String
+  question   String
+  options    String // JSON array: [{"text": "Option A", "votes": 0}, ...]
+  totalVotes Int      @default(0)
+  status     String   @default("active") // "active" | "closed"
+  createdBy  String
+  createdAt  DateTime @default(now())
+
+  session LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, status])
+}
+
+model StreamReaction {
+  id        String   @id @default(cuid())
+  sessionId String
+  userId    String
+  userName  String?
+  emoji     String   @default("👍")
+  createdAt DateTime @default(now())
+
+  session LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+}
+
+model LiveAttendance {
+  id            String    @id @default(cuid())
+  sessionId     String
+  userId        String
+  userName      String?
+  joinTime      DateTime  @default(now())
+  leaveTime     DateTime?
+  watchDuration Int       @default(0) // in seconds
+  isPresent     Boolean   @default(true)
+
+  session LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, userId])
+}
+
+model ClassCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  displayName String
+  description String?
+  thumbnail   String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  courses      Course[]
+  liveSessions LiveSession[]
+
+  @@index([order])
+  @@index([isActive])
+}
+
+model HeroSlide {
+  id                   String   @id @default(cuid())
+  title                String
+  subtitle             String
+  badge                String
+  imageUrl             String
+  buttonLabel          String   @default("Enroll Now")
+  buttonLink           String   @default("register")
+  secondaryButtonLabel String   @default("Free Demo Class")
+  secondaryButtonLink  String   @default("contact")
+  features             String? // JSON array: ["Feature 1", "Feature 2", ...]
+  theme                String? // "neet" | "jee" | "excellence" | "custom"
+  bgGradient           String? // CSS gradient string
+  accentColor          String   @default("#00C853")
+  slideOrder           Int      @default(0)
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([slideOrder])
+  @@index([isActive, slideOrder])
+}

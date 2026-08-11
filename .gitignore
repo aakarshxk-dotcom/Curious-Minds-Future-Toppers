@@ -1,0 +1,42 @@
+node_modules/
+.next/
+out/
+*.log
+dev.log
+dev.log.err
+dev.pid
+server.log
+install.log
+.env
+.env.local
+.env.production
+prisma/dev.db
+prisma/dev.db-journal
+dev.db
+custom.db
+public/uploads/
+verify-*.png
+*.ps1
+start.sh
+
+# Scratch / local junk
+verify-*.png
+screenshot-*.png
+homepage-*.png
+course-detail-check.png
+slide*.png
+slide-darwin*
+pasted_image_*
+WhatsApp Image*
+IMG-*.jpg
+read_*.txt
+bash_*.txt
+--timeout.png
+curious m,ind .html
+*.tsbuildinfo
+Dockerfile.txt
+Caddyfile.txt
+nginx.conf
+docker-compose.yml
+run-server.sh
+start-dev*.sh
