@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
+import { Suspense } from "react"
 import { BookOpen, Clock, Search, Users } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -33,6 +34,21 @@ const levelColors: Record<string, string> = {
 const categories = ["All", "CBSE", "ICSE", "Bihar Board", "JEE", "NEET", "Coding"]
 
 export default function CoursesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-12 lg:px-8">
+          <div className="h-10 w-64 animate-pulse rounded-lg bg-muted" />
+          <div className="mt-8 h-10 w-full animate-pulse rounded-lg bg-muted" />
+        </div>
+      }
+    >
+      <CoursesContent />
+    </Suspense>
+  )
+}
+
+function CoursesContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [courses, setCourses] = React.useState<Course[]>([])
