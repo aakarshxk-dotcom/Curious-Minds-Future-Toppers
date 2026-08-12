@@ -6,15 +6,41 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { EnrollButton } from "./EnrollButton"
+import { db } from "@/lib/db"
 
 async function getCourse(id: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/courses/${id}`, {
-      cache: "no-store",
+    const course = await db.course.findUnique({
+      where: { id },
+      include: {
+        chapters: {
+          orderBy: { order: 'asc' },
+          include: {
+            videos: {
+              orderBy: { order: 'asc' },
+            },
+          },
+        },
+        _count: { select: { enrollments: true, reviews: true, quizzes: true } },
+        quizzes: {
+          where: { status: 'published' },
+          orderBy: { order: 'asc' },
+          include: {
+            _count: { select: { questions: true, attempts: true } },
+          },
+        },
+        announcements: {
+          orderBy: { createdAt: 'desc' },
+          take: 10,
+        },
+        resources: {
+          where: { type: 'PDF' },
+          orderBy: { createdAt: 'desc' },
+          take: 20,
+        },
+      },
     })
-    if (!res.ok) return null
-    const data = await res.json()
-    return data.data ?? null
+    return course ?? null
   } catch {
     return null
   }

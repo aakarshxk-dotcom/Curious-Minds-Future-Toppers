@@ -1,6 +1,8 @@
 node_modules/
 .next/
 out/
+dist/
+dist.zip
 *.log
 dev.log
 dev.log.err
