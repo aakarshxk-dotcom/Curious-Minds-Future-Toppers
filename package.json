@@ -6,15 +6,9 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-<<<<<<< HEAD
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build && node scripts/postbuild.mjs",
     "start": "node .next/standalone/server.js",
-=======
-    "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000",
->>>>>>> bb1b710 (Deploy to Render)
     "postinstall": "prisma generate",
     "lint": "eslint .",
     "db:push": "prisma db push",

@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     buildCommand: npm install && npx prisma generate && npm run build
-    startCommand: npx next start -p $PORT
+    startCommand: node .next/standalone/server.js
     autoDeploy: true
     envVars:
       - key: NODE_VERSION
