@@ -35,7 +35,6 @@ const categories = ["All", "CBSE", "ICSE", "Bihar Board", "JEE", "NEET", "Coding
 
 export default function CoursesPage() {
   return (
-<<<<<<< HEAD
     <Suspense
       fallback={
         <div className="container mx-auto px-4 py-12 lg:px-8">
@@ -46,23 +45,6 @@ export default function CoursesPage() {
     >
       <CoursesContent />
     </Suspense>
-=======
-    <React.Suspense fallback={<CoursesFallback />}>
-      <CoursesContent />
-    </React.Suspense>
-  )
-}
-
-function CoursesFallback() {
-  return (
-    <div className="container mx-auto px-4 py-12 lg:px-8">
-      <p className="text-sm font-semibold uppercase tracking-wider text-emerald-600">Courses</p>
-      <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-        Find Your Perfect Course
-      </h1>
-      <p className="mt-3 max-w-2xl text-muted-foreground">Loading courses…</p>
-    </div>
->>>>>>> bb1b710 (Deploy to Render)
   )
 }
 
