@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Atom, Code2, FlaskConical, Laptop, School, Stethoscope } from "lucide-react"
 

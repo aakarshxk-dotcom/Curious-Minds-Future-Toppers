@@ -12,14 +12,14 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const courseId = searchParams.get('courseId')
 
-  const pdfs = await db.pDFDocument.findMany({
-    where: courseId ? { courseId } : undefined,
+  const pdfs = await db.resource.findMany({
+    where: courseId ? { courseId, type: 'PDF' } : { type: 'PDF' },
     include: {
       course: {
         select: { id: true, title: true },
       },
     },
-    orderBy: { order: 'asc' },
+    orderBy: { createdAt: 'desc' },
   })
 
   return NextResponse.json({ success: true, data: pdfs })
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const { title, description, fileUrl, courseId, chapterId, type, order } = body
+  const { title, description, fileUrl, courseId, chapterId, category } = body
 
   if (!title || !fileUrl || !courseId) {
     return NextResponse.json(
@@ -64,15 +64,16 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const pdf = await db.pDFDocument.create({
+  const pdf = await db.resource.create({
     data: {
       title,
       description: description || null,
-      fileUrl,
+      url: fileUrl,
+      type: 'PDF',
       courseId,
       chapterId: chapterId || null,
-      type: type || 'note',
-      order: order ?? 0,
+      category: category || 'Notes',
+      uploadedById: payload.userId,
     },
   })
 

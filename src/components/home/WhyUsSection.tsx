@@ -1,3 +1,5 @@
+"use client"
+
 import { BarChart3, BookOpenCheck, MessagesSquare, MonitorPlay } from "lucide-react"
 
 const features = [

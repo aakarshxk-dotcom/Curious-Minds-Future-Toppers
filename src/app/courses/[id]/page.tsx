@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { BookOpen, Clock, GraduationCap, PlayCircle, Star, Users } from "lucide-react"
+import { BookOpen, Clock, GraduationCap, PlayCircle, Star, Users } from "@/components/ui/lucide-icons"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"

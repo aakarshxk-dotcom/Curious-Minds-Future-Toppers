@@ -49,7 +49,7 @@ export async function POST(
         data: {
           sessionId,
           userId: payload.userId,
-          userName: userName || payload.name,
+          userName: userName || null,
         },
       })
 

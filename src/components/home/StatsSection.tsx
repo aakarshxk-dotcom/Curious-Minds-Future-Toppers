@@ -40,29 +40,37 @@ function useCountUp(target: number, duration = 1500) {
   return { ref, value }
 }
 
+function StatItem({
+  icon: Icon,
+  label,
+  value,
+  suffix,
+}: (typeof stats)[number]) {
+  const { ref, value: count } = useCountUp(value)
+  return (
+    <div
+      ref={ref}
+      className="stat-glow-green flex flex-col items-center gap-2 rounded-2xl border bg-card p-6 text-center"
+    >
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-600">
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="text-3xl font-extrabold tabular-nums">
+        {count.toLocaleString()}
+        {suffix}
+      </span>
+      <span className="text-sm text-muted-foreground">{label}</span>
+    </div>
+  )
+}
+
 export function StatsSection() {
   return (
     <section className="border-y bg-muted/30">
       <div className="container mx-auto grid grid-cols-2 gap-6 px-4 py-12 lg:grid-cols-4 lg:px-8">
-        {stats.map((stat) => {
-          const { ref, value } = useCountUp(stat.value)
-          return (
-            <div
-              key={stat.label}
-              ref={ref}
-              className="stat-glow-green flex flex-col items-center gap-2 rounded-2xl border bg-card p-6 text-center"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-600">
-                <stat.icon className="h-5 w-5" />
-              </span>
-              <span className="text-3xl font-extrabold tabular-nums">
-                {value.toLocaleString()}
-                {stat.suffix}
-              </span>
-              <span className="text-sm text-muted-foreground">{stat.label}</span>
-            </div>
-          )
-        })}
+        {stats.map((stat) => (
+          <StatItem key={stat.label} {...stat} />
+        ))}
       </div>
     </section>
   )

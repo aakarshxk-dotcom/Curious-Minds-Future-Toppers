@@ -42,4 +42,4 @@ export function getUserFromRequest(request: Request): TokenPayload | null {
   return verifyToken(token)
 }
 
-export { TokenPayload }
+export type { TokenPayload }
