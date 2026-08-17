@@ -15,8 +15,8 @@ const publicSrc = join(root, 'public')
 const publicDest = join(standalone, 'public')
 
 if (!existsSync(join(standalone, 'server.js'))) {
-  console.error('postbuild: .next/standalone/server.js missing - did next build run?')
-  process.exit(1)
+  console.log('postbuild: standalone output not present (e.g. on Vercel) - skipping copy step')
+  process.exit(0)
 }
 
 cpSync(staticSrc, staticDest, { recursive: true })
