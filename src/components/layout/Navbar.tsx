@@ -84,11 +84,10 @@ export function Navbar() {
             <GraduationCap className="h-5 w-5 text-white" />
           </span>
           <span className="hidden text-lg font-bold tracking-tight sm:block">
-            Curious Minds
-            <span className="text-emerald-600"> Future Toppers</span>
+            Future<span className="text-emerald-600"> Toppers</span>
           </span>
           <span className="text-lg font-bold tracking-tight sm:hidden">
-            CMFT
+            Future Toppers
           </span>
         </Link>
 

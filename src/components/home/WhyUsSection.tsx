@@ -30,7 +30,7 @@ export function WhyUsSection() {
     <section className="container mx-auto px-4 py-16 lg:px-8">
       <div className="mx-auto mb-12 max-w-2xl text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-emerald-600">
-          Why Curious Minds?
+          Why Future Toppers?
         </p>
         <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
           Learning That Actually Works

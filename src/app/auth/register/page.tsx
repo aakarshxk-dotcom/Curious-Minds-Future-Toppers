@@ -51,7 +51,7 @@ export default function RegisterPage() {
           </span>
           <CardTitle className="mt-4 text-2xl">Create Your Account</CardTitle>
           <CardDescription>
-            Join Curious Minds Future Toppers — it&apos;s free to start
+            Join Future Toppers — it&apos;s free to start
           </CardDescription>
         </CardHeader>
         <CardContent>

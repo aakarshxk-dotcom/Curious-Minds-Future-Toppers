@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       description: description || null,
       courseId: courseId || null,
       teacherId: payload.userId,
-      channelId: channelId || `cmft-${Date.now().toString(36)}`,
+      channelId: channelId || `ft-${Date.now().toString(36)}`,
       batchName: batchName || null,
       batchType: batchType || null,
       subject: subject || null,

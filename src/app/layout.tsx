@@ -7,11 +7,11 @@ import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: {
-    default: "Curious Minds Future Toppers | Online Coaching & Courses",
-    template: "%s | Curious Minds Future Toppers",
+    default: "Future Toppers | Online Coaching & Courses",
+    template: "%s | Future Toppers",
   },
   description:
-    "Curious Minds Future Toppers — CBSE, ICSE, Bihar Board, JEE, NEET and Coding coaching with live classes, recorded courses, quizzes and certificates.",
+    "Future Toppers — CBSE, ICSE, Bihar Board, JEE, NEET and Coding coaching with live classes, recorded courses, quizzes and certificates.",
   keywords: [
     "coaching",
     "cbse",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     "online courses",
   ],
   openGraph: {
-    title: "Curious Minds Future Toppers",
+    title: "Future Toppers",
     description:
       "CBSE, ICSE, Bihar Board, JEE, NEET & Coding coaching with live classes and recorded courses.",
     type: "website",

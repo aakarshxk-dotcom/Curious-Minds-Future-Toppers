@@ -101,7 +101,7 @@ export default function ContactPage() {
               </span>
               <div>
                 <p className="font-semibold">Email Us</p>
-                <p className="text-sm text-muted-foreground">hello@curiousminds.co.in</p>
+                <p className="text-sm text-muted-foreground">hello@futuretoppers.co.in</p>
               </div>
             </div>
             <div className="flex items-start gap-3">

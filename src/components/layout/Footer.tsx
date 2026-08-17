@@ -30,8 +30,7 @@ export function Footer() {
               <GraduationCap className="h-5 w-5 text-white" />
             </span>
             <span className="text-lg font-bold">
-              Curious Minds{" "}
-              <span className="text-emerald-600">Future Toppers</span>
+              Future <span className="text-emerald-600">Toppers</span>
             </span>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
@@ -87,7 +86,7 @@ export function Footer() {
             </li>
             <li className="flex items-start gap-2">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-              hello@curiousminds.co.in
+              hello@futuretoppers.co.in
             </li>
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
@@ -100,7 +99,7 @@ export function Footer() {
       <div className="border-t">
         <div className="container mx-auto flex flex-col items-center justify-between gap-2 px-4 py-5 text-center text-xs text-muted-foreground sm:flex-row lg:px-8">
           <p>
-            © {new Date().getFullYear()} Curious Minds Future Toppers. All
+            © {new Date().getFullYear()} Future Toppers. All
             rights reserved.
           </p>
           <p>Learning today, leading tomorrow.</p>
